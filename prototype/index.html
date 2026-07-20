@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flaky Crust — Distributor Procurement Console (Prototype)</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel-2:#1c232d; --line:#2a323d;
+    --ink:#e8edf3; --ink-dim:#9aa7b4; --ink-faint:#66727f;
+    --amber:#ffb020; --amber-ink:#1a1300;
+    --green:#38c172; --red:#ff5c5c; --blue:#4aa3ff; --purple:#b98bff;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); font-size:14px; line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .demo-banner{
+    background:repeating-linear-gradient(45deg,#2a2000,#2a2000 12px,#241c00 12px,#241c00 24px);
+    color:var(--amber); text-align:center; font-size:12px; font-weight:600;
+    padding:6px; letter-spacing:.04em; border-bottom:1px solid #3a2e00;
+  }
+  /* ---- top bar ---- */
+  header.topbar{
+    display:flex; align-items:center; gap:18px; padding:12px 20px;
+    background:var(--panel); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-.01em; font-size:16px}
+  .brand .mark{
+    width:30px;height:30px;border-radius:8px;background:var(--amber);color:var(--amber-ink);
+    display:grid;place-items:center;font-weight:900;font-size:16px;
+    box-shadow:0 0 0 1px #0006 inset;
+  }
+  .brand small{color:var(--ink-faint);font-weight:600;font-size:10px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-top:-2px}
+  .topbar .spacer{flex:1}
+  .who{display:flex;align-items:center;gap:10px;font-size:13px}
+  .who .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4aa3ff,#b98bff);display:grid;place-items:center;font-weight:700;color:#0b0e12}
+  .who .co{font-weight:700}
+  .who .tierline{color:var(--ink-dim);font-size:11px}
+  /* ---- layout ---- */
+  .wrap{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 96px)}
+  aside{background:var(--panel);border-right:1px solid var(--line);padding:16px 14px}
+  .side-h{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);margin:6px 4px 10px;font-weight:700}
+  .conn{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:9px;margin-bottom:4px;cursor:default}
+  .conn:hover{background:var(--panel-2)}
+  .conn .logo{width:26px;height:26px;border-radius:6px;background:#26303c;display:grid;place-items:center;font-weight:800;font-size:11px;color:#cdd7e1;flex:none}
+  .conn .n{flex:1;min-width:0}
+  .conn .n b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .conn .n span{font-size:10px;color:var(--ink-faint)}
+  .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .dot.live{background:var(--green);box-shadow:0 0 8px #38c17288}
+  .dot.login{background:var(--amber)}
+  .dot.phone{background:var(--red)}
+  .legend{margin-top:14px;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:11px;color:var(--ink-dim);line-height:1.7}
+  .legend .row{display:flex;align-items:center;gap:7px}
+  main{padding:20px 24px;min-width:0}
+  /* ---- search ---- */
+  .searchrow{display:flex;gap:10px;margin-bottom:14px}
+  .search{flex:1;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 14px}
+  .search:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px #ffb02022}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-size:15px;padding:13px 0}
+  .search .ico{color:var(--ink-faint);font-size:16px}
+  .btn{border:none;border-radius:11px;padding:0 16px;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .btn.amber{background:var(--amber);color:var(--amber-ink)}
+  .btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+  .btn.amber:hover{filter:brightness(1.06)}
+  .btn.ghost:hover{background:var(--panel-2)}
+  /* ---- stat strip ---- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);font-weight:700}
+  .stat .v{font-size:22px;font-weight:800;margin-top:3px}
+  .stat .v small{font-size:12px;color:var(--ink-dim);font-weight:600}
+  .stat .v .up{color:var(--green)} .stat .v .down{color:var(--red)}
+  /* ---- table ---- */
+  .tablecard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .tbar{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .tbar h2{font-size:14px;font-weight:800}
+  .tbar .count{color:var(--ink-faint);font-size:12px;font-weight:600}
+  .tbar .spacer{flex:1}
+  .chip{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;border:1px solid var(--line);color:var(--ink-dim);cursor:pointer;background:none}
+  .chip.on{background:var(--amber);color:var(--amber-ink);border-color:var(--amber)}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-weight:700;padding:10px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:12px 16px;border-bottom:1px solid #20272f;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#141a21}
+  .prod b{display:block;font-size:13.5px}
+  .prod span{font-size:11px;color:var(--ink-faint)}
+  .mfr{display:flex;align-items:center;gap:8px}
+  .mfr .m{width:24px;height:24px;border-radius:6px;background:#26303c;display:grid;place-items:center;font-size:9px;font-weight:800;color:#cdd7e1;flex:none}
+  .price b{font-size:15px;font-weight:800}
+  .price .list{font-size:11px;color:var(--ink-faint);text-decoration:line-through}
+  .tier{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;background:#123a24;color:#5fe39a;border:1px solid #1d5c39}
+  .tier.t1{background:#3a1212;color:#ff9a9a;border-color:#5c1d1d}
+  .tier.t2{background:#3a2e12;color:#ffd27a;border-color:#5c481d}
+  .stock .n{font-weight:700}
+  .stock .loc{font-size:11px;color:var(--ink-faint)}
+  .instock{color:var(--green)} .low{color:var(--amber)} .out{color:var(--red)}
+  .lead{font-weight:700}
+  .add{border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:9px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer}
+  .add:hover{border-color:var(--amber);color:var(--amber)}
+  .add.in{background:var(--amber);color:var(--amber-ink);border-color:var(--amber)}
+  .flag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:6px}
+  .flag.bo{background:#3a1212;color:#ff9a9a}
+  .flag.pi{background:#2a2440;color:#c9b3ff}
+  /* ---- right/AI + PO ---- */
+  .ai{margin-top:16px;background:linear-gradient(180deg,#1a2230,#161b22);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .ai h3{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .ai .spark{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,var(--purple),var(--blue));display:grid;place-items:center;font-size:12px}
+  .ai .sub{color:var(--ink-dim);font-size:12px;margin-bottom:12px}
+  .ai .q{display:flex;gap:8px;flex-wrap:wrap}
+  .ai .q button{font-size:12px;background:var(--panel-2);border:1px solid var(--line);color:var(--ink-dim);border-radius:20px;padding:7px 12px;cursor:pointer}
+  .ai .q button:hover{border-color:var(--purple);color:var(--ink)}
+  .ai .answer{margin-top:12px;background:#0f141b;border:1px solid var(--line);border-radius:10px;padding:13px;font-size:13px;display:none}
+  .ai .answer.show{display:block}
+  .ai .answer .tag{font-size:10px;color:var(--purple);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  /* ---- PO bar (free freight) ---- */
+  .po{position:sticky;bottom:0;margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;z-index:15}
+  .po .top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .po .top b{font-size:14px}
+  .po .top .spacer{flex:1}
+  .po .amt{font-size:18px;font-weight:800}
+  .bar{height:10px;border-radius:6px;background:#0f141b;border:1px solid var(--line);overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--amber),#ffd27a);width:0;transition:width .4s ease}
+  .po .hint{font-size:12px;color:var(--ink-dim);margin-top:8px;display:flex;align-items:center;gap:8px}
+  .po .hint.ready{color:var(--green);font-weight:700}
+  .muted{color:var(--ink-faint)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr}aside{display:none}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="demo-banner">◆ PROTOTYPE — Project Flaky Crust · sample data only, not connected to any real manufacturer · built 2026-07-20</div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">◆</div>
+    <div>Flaky&nbsp;Crust<small>Procurement Console</small></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="who">
+    <div style="text-align:right">
+      <div class="co">Industrial Supply</div>
+      <div class="tierline">Salt Lake City, UT · <span style="color:var(--amber)">Tier 3 account</span></div>
+    </div>
+    <div class="avatar">IS</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- LEFT: connected manufacturers -->
+  <aside>
+    <div class="side-h">Connected Manufacturers</div>
+    <div id="connList"></div>
+    <div class="legend">
+      <div class="row"><span class="dot live"></span> <b style="color:var(--ink)">Live API</b> — auto-refresh ~15&nbsp;min</div>
+      <div class="row" style="margin-top:5px"><span class="dot login"></span> <b style="color:var(--ink)">Login</b> — pulled behind your creds</div>
+      <div class="row" style="margin-top:5px"><span class="dot phone"></span> <b style="color:var(--ink)">Phone only</b> — no data feed yet</div>
+      <div style="margin-top:9px;color:var(--ink-faint)">Your tier &amp; price are specific to each brand.</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="searchrow">
+      <div class="search">
+        <span class="ico">⌕</span>
+        <input id="q" placeholder="Search across every manufacturer — SKU, product, brand… (try: gloves, blade, tape, 3M)" autocomplete="off" />
+      </div>
+      <button class="btn ghost" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">Manufacturers linked</div><div class="v">1,487 <small>/ 4,200</small></div></div>
+      <div class="stat"><div class="k">SKUs searchable</div><div class="v">312,940</div></div>
+      <div class="stat"><div class="k">Open back-orders</div><div class="v"><span class="down">14</span> <small>flagged</small></div></div>
+      <div class="stat"><div class="k">Price changes (7d)</div><div class="v"><span class="up">38</span> <small>caught early</small></div></div>
+    </div>
+
+    <div class="tablecard">
+      <div class="tbar">
+        <h2>Results</h2>
+        <span class="count" id="count"></span>
+        <div class="spacer"></div>
+        <button class="chip on" data-f="all" onclick="setFilter(this)">All</button>
+        <button class="chip" data-f="instock" onclick="setFilter(this)">In stock</button>
+        <button class="chip" data-f="live" onclick="setFilter(this)">Live API</button>
+        <button class="chip" data-f="alert" onclick="setFilter(this)">⚠ Alerts</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>Product</th><th>Manufacturer</th><th>Your price</th><th>Stock / ships from</th><th>Lead time</th><th></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <!-- AI assistant -->
+    <div class="ai">
+      <h3><span class="spark">✦</span> Ask the desk</h3>
+      <div class="sub">The questions your inside-sales team asks all day — answered from live data instead of a phone call.</div>
+      <div class="q">
+        <button onclick="askAI(0)">Do we have 10 gallons of the Rust-Oleum epoxy?</button>
+        <button onclick="askAI(1)">Cheapest nitrile glove in stock right now?</button>
+        <button onclick="askAI(2)">Anything on back-order I should warn a customer about?</button>
+        <button onclick="askAI(3)">Who hasn't ordered in 90 days?</button>
+      </div>
+      <div class="answer" id="aiAnswer"></div>
+    </div>
+
+    <!-- PO batching / free freight -->
+    <div class="po">
+      <div class="top">
+        <b>Working PO</b> <span class="muted" id="poCount">— empty</span>
+        <div class="spacer"></div>
+        <div class="amt" id="poAmt">$0</div>
+      </div>
+      <div class="bar"><div class="fill" id="poFill"></div></div>
+      <div class="hint" id="poHint"><span>Add items to build toward the $8,500 free-freight threshold. POs hold until they hit it, then release automatically.</span></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const FREIGHT = 8500;
+// manufacturers: name, short, connection type, your tier for that brand
+const MFRS = [
+  {n:"3M", s:"3M", conn:"live", tier:3},
+  {n:"DeWalt", s:"DW", conn:"live", tier:1},
+  {n:"Milwaukee", s:"MW", conn:"live", tier:3},
+  {n:"Ansell", s:"AN", conn:"login", tier:2},
+  {n:"Rust-Oleum", s:"RO", conn:"login", tier:3},
+  {n:"Kimberly-Clark", s:"KC", conn:"login", tier:2},
+  {n:"Norton Abrasives", s:"NA", conn:"phone", tier:3},
+  {n:"Honeywell", s:"HW", conn:"live", tier:2},
+  {n:"MSA Safety", s:"MSA", conn:"phone", tier:1},
+];
+// products
+const P = [
+  {sku:"MW-48-22-8430", d:"Fastback Compact Folding Utility Knife", cat:"blade", mfr:"Milwaukee", price:11.40, list:16.99, qty:640, loc:"Reno, NV", lead:2},
+  {sku:"MW-48-11-2440", d:"M18 REDLITHIUM XC 4.0Ah Battery", cat:"battery", mfr:"Milwaukee", price:79.20, list:129.00, qty:58, loc:"Reno, NV", lead:3},
+  {sku:"DW-DWA4938", d:'4.5" Metal Cutting Wheel (Type 1, 25pk)', cat:"blade", mfr:"DeWalt", price:41.90, list:47.50, qty:12, loc:"Ontario, CA", lead:5, flag:"bo"},
+  {sku:"DW-DPG82-11", d:"Concealer Clear Anti-Fog Safety Goggle", cat:"safety", mfr:"DeWalt", price:6.10, list:7.25, qty:0, loc:"Ontario, CA", lead:14, flag:"bo"},
+  {sku:"3M-2091", d:"Particulate Filter P100 (pair)", cat:"safety", mfr:"3M", price:3.85, list:5.60, qty:1240, loc:"Salt Lake City, UT", lead:1},
+  {sku:"3M-6200", d:"Half Facepiece Reusable Respirator (M)", cat:"safety", mfr:"3M", price:14.20, list:22.40, qty:210, loc:"Salt Lake City, UT", lead:1},
+  {sku:"3M-2200", d:'Blue Painter’s Tape 1.88" x 60yd (case/24)', cat:"tape", mfr:"3M", price:38.60, list:54.00, qty:96, loc:"Salt Lake City, UT", lead:1, flag:"pi"},
+  {sku:"AN-92-600", d:"TouchNTuff Nitrile Gloves, L (case/1000)", cat:"gloves", mfr:"Ansell", price:64.00, list:89.00, qty:340, loc:"Coshocton, OH", lead:4},
+  {sku:"AN-11-724", d:"HyFlex Cut-Resistant Glove A4, L (12pr)", cat:"gloves", mfr:"Ansell", price:71.50, list:96.00, qty:22, loc:"Coshocton, OH", lead:6},
+  {sku:"KC-55082", d:"KleenGuard Nitrile Exam Gloves, L (case/1000)", cat:"gloves", mfr:"Kimberly-Clark", price:58.90, list:82.00, qty:0, loc:"Roswell, GA", lead:10, flag:"bo"},
+  {sku:"RO-9101402", d:"Concrete & Garage Epoxy Kit, Gray (2gal)", cat:"epoxy", mfr:"Rust-Oleum", price:74.30, list:104.00, qty:44, loc:"Vernon Hills, IL", lead:5},
+  {sku:"RO-9105408", d:"Industrial Floor Epoxy, Clear (2gal)", cat:"epoxy", mfr:"Rust-Oleum", price:82.10, list:118.00, qty:9, loc:"Vernon Hills, IL", lead:7},
+  {sku:"NA-66253-31", d:'Blaze Grinding Wheel 4.5" x 1/4" (10pk)', cat:"blade", mfr:"Norton Abrasives", price:33.40, list:39.00, qty:null, loc:"—", lead:null},
+  {sku:"HW-RWS-54011", d:"Howard Leight Max-1 Foam Earplugs (200pr)", cat:"safety", mfr:"Honeywell", price:29.80, list:41.00, qty:520, loc:"Smithfield, RI", lead:2},
+  {sku:"MSA-10194792", d:"V-Gard Full Brim Hard Hat, White", cat:"safety", mfr:"MSA Safety", price:16.40, list:23.50, qty:null, loc:"—", lead:null},
+];
+
+let filter="all", cart=[];
+
+function tierClass(t){return t===1?"tier t1":t===2?"tier t2":"tier"}
+function connLabel(c){return c==="live"?"Live API":c==="login"?"Login-linked":"Phone only"}
+
+function renderConns(){
+  document.getElementById("connList").innerHTML = MFRS.map(m=>`
+    <div class="conn">
+      <div class="logo">${m.s}</div>
+      <div class="n"><b>${m.n}</b><span>${connLabel(m.conn)} · Tier ${m.tier}</span></div>
+      <span class="dot ${m.conn}"></span>
+    </div>`).join("");
+}
+
+function matchRow(p, q){
+  if(!q) return true;
+  q=q.toLowerCase();
+  return (p.d+" "+p.sku+" "+p.mfr+" "+p.cat).toLowerCase().includes(q);
+}
+function passFilter(p){
+  const m=MFRS.find(x=>x.n===p.mfr);
+  if(filter==="instock") return p.qty>0;
+  if(filter==="live") return m.conn==="live";
+  if(filter==="alert") return p.flag;
+  return true;
+}
+
+function stockCell(p){
+  if(p.qty===null) return `<div class="stock"><span class="n out">No feed</span><div class="loc">phone the rep</div></div>`;
+  if(p.qty===0) return `<div class="stock"><span class="n out">Out</span><div class="loc">${p.loc}</div></div>`;
+  const cls=p.qty<25?"low":"instock";
+  const lbl=p.qty<25?"Low":"In stock";
+  return `<div class="stock"><span class="n ${cls}">${lbl} · ${p.qty.toLocaleString()}</span><div class="loc">ships ${p.loc}</div></div>`;
+}
+function leadCell(p){
+  if(p.lead===null) return `<span class="muted">—</span>`;
+  const c=p.lead<=3?"instock":p.lead<=7?"low":"out";
+  return `<span class="lead ${c}">${p.lead} day${p.lead>1?'s':''}</span>`;
+}
+function flagBadge(p){
+  if(p.flag==="bo") return `<span class="flag bo">BACK-ORDER</span>`;
+  if(p.flag==="pi") return `<span class="flag pi">▲ PRICE UP</span>`;
+  return "";
+}
+
+function render(){
+  const q=document.getElementById("q").value.trim();
+  const list=P.filter(p=>matchRow(p,q)&&passFilter(p));
+  document.getElementById("count").textContent = `${list.length} of ${P.length} shown · across ${new Set(list.map(p=>p.mfr)).size} manufacturers`;
+  document.getElementById("rows").innerHTML = list.map(p=>{
+    const m=MFRS.find(x=>x.n===p.mfr);
+    const inCart=cart.includes(p.sku);
+    const canAdd=p.qty>0;
+    return `<tr>
+      <td class="prod"><b>${p.d}${flagBadge(p)}</b><span>${p.sku}</span></td>
+      <td><div class="mfr"><div class="m">${m.s}</div><div><div>${p.mfr}</div><div style="font-size:10px;color:var(--ink-faint)">${connLabel(m.conn)}</div></div></div></td>
+      <td class="price"><b>$${p.price.toFixed(2)}</b> <span class="${tierClass(m.tier)}">T${m.tier}</span><div class="list">list $${p.list.toFixed(2)}</div></td>
+      <td>${stockCell(p)}</td>
+      <td>${leadCell(p)}</td>
+      <td>${canAdd?`<button class="add ${inCart?'in':''}" onclick="toggleCart('${p.sku}')">${inCart?'✓ Added':'+ Add'}</button>`:`<span class="muted" style="font-size:12px">—</span>`}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="6" style="padding:30px;text-align:center;color:var(--ink-faint)">No results. Try “gloves”, “epoxy”, “blade”, or a brand like “3M”.</td></tr>`;
+}
+
+function toggleCart(sku){
+  const i=cart.indexOf(sku);
+  if(i>=0)cart.splice(i,1); else cart.push(sku);
+  render(); renderPO();
+}
+function renderPO(){
+  const items=cart.map(s=>P.find(p=>p.sku===s));
+  const total=items.reduce((a,p)=>a+p.price* (p.mfr==='Ansell'||p.mfr==='Kimberly-Clark'?1:1),0);
+  // simulate case quantities to make totals meaningful
+  const grand=items.reduce((a,p)=>a+p.price*caseQty(p),0);
+  document.getElementById("poCount").textContent = items.length? `— ${items.length} line item${items.length>1?'s':''}` : "— empty";
+  document.getElementById("poAmt").textContent = "$"+grand.toLocaleString(undefined,{maximumFractionDigits:0});
+  const pct=Math.min(100, grand/FREIGHT*100);
+  document.getElementById("poFill").style.width = pct+"%";
+  const hint=document.getElementById("poHint");
+  if(grand>=FREIGHT){
+    hint.className="hint ready";
+    hint.innerHTML=`<span>✓ Free-freight threshold hit — this PO releases automatically. Est. freight saved: ~$420.</span>`;
+  }else{
+    hint.className="hint";
+    const need=(FREIGHT-grand);
+    hint.innerHTML=`<span>$${need.toLocaleString(undefined,{maximumFractionDigits:0})} more to hit the $8,500 free-freight threshold. Holding PO until then.</span>`;
+  }
+}
+function caseQty(p){ // pretend buyers order in bulk
+  const map={gloves:40,epoxy:12,tape:8,safety:20,blade:15,battery:6};
+  return map[p.cat]||10;
+}
+
+const AI=[
+ {q:"Do we have 10 gallons of the Rust-Oleum epoxy?",
+  a:"Rust-Oleum Industrial Floor Epoxy (RO-9105408) is a 2-gal kit — <b>9 kits on hand</b> (= 18 gal) shipping from Vernon Hills, IL, 7-day lead, your Tier 3 price <b>$82.10/kit</b>. 10 gal = 5 kits, so <b>yes, in stock</b>. Heads-up: only 9 left; if the customer wants a buffer I'd add the Gray kit (44 on hand) or reorder now."},
+ {q:"Cheapest nitrile glove in stock right now?",
+  a:"<b>Ansell TouchNTuff (AN-92-600)</b>, case of 1000, <b>$64.00</b> at your Tier 2 — 340 cases in stock, 4-day lead. The Kimberly-Clark KleenGuard is cheaper on paper ($58.90) but it's <b>back-ordered (0 on hand, 10-day lead)</b>, so Ansell is the real answer today."},
+ {q:"Anything on back-order I should warn a customer about?",
+  a:"<b>3 items flagged back-order:</b> DeWalt DWA4938 cutting wheels (12 left, going fast), DeWalt DPG82-11 goggles (0, 14-day lead), and KleenGuard nitrile gloves (0, 10-day lead). Also 3M painter's tape had a <b>price increase caught 2 days ago</b> — requote before you commit."},
+ {q:"Who hasn't ordered in 90 days?",
+  a:"<b>7 accounts</b> in your book have gone quiet 90+ days — top 3 by past spend: <b>Wasatch CNC</b> (last order $6.2k, day 104), <b>Mtn West Fabrication</b> (day 97), <b>Alpha Coatings</b> (day 92). Want me to draft a check-in email + attach their usual reorder list?"},
+];
+function askAI(i){
+  const el=document.getElementById("aiAnswer");
+  el.className="answer show";
+  el.innerHTML=`<div class="tag">Flaky Crust · answered from live data</div><div style="margin-top:6px">${AI[i].a}</div>`;
+}
+
+function setFilter(btn){
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+  btn.classList.add("on"); filter=btn.dataset.f; render();
+}
+function clearSearch(){document.getElementById("q").value="";render();}
+document.getElementById("q").addEventListener("input",render);
+
+renderConns(); render(); renderPO();
+</script>
+</body>
+</html>

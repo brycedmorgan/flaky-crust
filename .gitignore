@@ -1,0 +1,21 @@
+# deps / build
+node_modules/
+dist/
+build/
+.cache/
+
+# env & secrets — never commit
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+
+# scratch
+tmp/
+scratch/
