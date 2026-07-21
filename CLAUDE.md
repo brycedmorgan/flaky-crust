@@ -19,6 +19,16 @@
 
 ## Session Log
 
+### 2026-07-21 — AI outreach agent idea + Braydn/Matt update
+
+- **Bryce's idea:** a dedicated AI-operated email + phone number that auto-calls/emails **phone-only manufacturers** for SKUs/stock/price/lead-time, plus a **services arm** to help distributors on bad/no systems upgrade *onto our platform.*
+- **Assessment:** strong — it closes the last rung of the connector ladder (phone-only dead-end → real connector) and automates a job Industrial Supply already pays humans to do. Refinement: **email/text-first, voice as fallback** (cheaper, auditable, no IVR/hold). Hard guardrail: **verbatim capture + source/as-of/confidence**, never model-paraphrased numbers. Compliance: per-state AI-call disclosure + recording consent (Utah one-party, but callee may be two-party).
+- **Cost (rough):** voice ~$0.05–0.15/min → ~$0.20–0.75/completed call; numbers ~$1–2/mo; email agent ~fractions of a cent/msg; build = weeks on Vapi/Bland/Retell + Twilio. Few-hundred lookups/day ≈ $50–200/day agent cost vs. a salaried caller.
+- **Monetization:** raises base SaaS value; metered call/email add-on (where usage-pricing finally fits); "get you off the phones" managed tier; upgrade/migration services (highest margin + moat = become their system of record); build-once-monetize-across-tenants.
+- **Shipped:** [docs/AI_OUTREACH_AGENT.md](docs/AI_OUTREACH_AGENT.md) + README link. Slots into Phase 2 (build after the clean-data core is proven), tagged in the Phase 0 matrix as "AI-agent candidates."
+- **Also:** drafted the Braydn + Matt update message (in chat) covering the plan/roadmap/Q&A + this idea + the prototype link. Prototype Artifact URL: https://claude.ai/code/artifact/61a1e1fe-db7c-40fd-84ef-5b7815066413
+- **Open:** confirm what "quo.com" refers to (specific tool?) to price against. Whether to send the update via iMessage/email (held — needs Bryce's go + their contacts).
+
 ### 2026-07-20 (PM) — Plan, roadmap, and answers to Braydn's concerns
 
 - **Trigger:** Bryce asked for "a plan and a roadmap and to address Braydn's concerns and questions" (+ yes to publishing the prototype as a shareable Artifact link).
