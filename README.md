@@ -8,7 +8,9 @@
 
 | Path | What it is |
 |---|---|
-| [`docs/PRD.md`](docs/PRD.md) | Product notes: problem, solution, the tiered-pricing challenge, business model, roadmap, open questions for Matt |
+| [`docs/PRD.md`](docs/PRD.md) | Product notes: problem, solution, the tiered-pricing challenge, business model, open questions for Matt |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | **Plan & phased roadmap** — Phase 0 validation → single-tenant MVP → SaaS → vertical expansion, with stack, risks, and immediate next actions |
+| [`docs/BRAYDN_QA.md`](docs/BRAYDN_QA.md) | **Braydn's concerns & questions, answered** — the login/bot problem, identity-specific pricing, the EDI shortcut, business model, cultural risk |
 | [`docs/CALL_NOTES_2026-07-20.md`](docs/CALL_NOTES_2026-07-20.md) | Structured notes from the two kickoff calls |
 | [`prototype/index.html`](prototype/index.html) | **Clickable prototype** — single-file, no build. Unified search, tier badges, live/login/phone connection status, "Ask the desk" AI concept, and the $8,500 free-freight PO-batching bar. Sample data only. |
 

@@ -19,6 +19,17 @@
 
 ## Session Log
 
+### 2026-07-20 (PM) — Plan, roadmap, and answers to Braydn's concerns
+
+- **Trigger:** Bryce asked for "a plan and a roadmap and to address Braydn's concerns and questions" (+ yes to publishing the prototype as a shareable Artifact link).
+- **Shipped (this repo):**
+  - [docs/ROADMAP.md](docs/ROADMAP.md) — strategy + 5 phases (Phase 0 validation/no-code → Phase 1 single-tenant MVP for Industrial Supply → Phase 2 harden+AI → Phase 3 multi-tenant SaaS+billing → Phase 4 vertical expansion), guiding principles, tentative stack (Next.js/Vercel + Postgres + connector jobs + AI SDK), risk register, immediate next actions.
+  - [docs/BRAYDN_QA.md](docs/BRAYDN_QA.md) — direct answers to Braydn's 7 call objections: (1) bot-login/password worry → priority ladder API→EDI→OAuth-token→headless→phone, tokens-not-passwords (Plaid precedent); (2) identity-specific pricing → always `price(distributor, mfr, sku)`, fetched behind their creds, never a public feed; (3) the **EDI 846/832 + cXML PunchOut shortcut** (industry may already receive these files → possible v1 on-ramp); (4) tier-aware manufacturer endpoints = Phase 3 partnership play; (5) one-time connect friction vs zero daily friction; (6) subscription-first (transaction-% is Phase 3, per-PO is lumpy w/ free-freight batching — Braydn's skepticism was right); (7) augment-don't-replace cultural framing.
+  - **The single de-risking artifact = the "Connector Feasibility Matrix"** (top ~50 manufacturers by spend × API/EDI/login/phone). That's Matt's Phase 0 job; nearly every open question resolves from it.
+- **Central technical insight to carry forward:** this industry already runs on EDI (846 inventory, 832 price catalog) + PunchOut — check whether Industrial Supply already *receives* those before building 50 API integrations.
+- **Prototype published as an Artifact** (default-private to Bryce) for phone-viewing by Braydn/Matt — URL captured in chat.
+- **Pick up next:** get Matt's Connector Feasibility Matrix + inside-sales field/click-path session on the calendar (after the Kinsey project, per sequencing). Then lock the stack and start Phase 1.
+
 ### 2026-07-20 — Project kickoff: notes + clickable prototype
 
 - **Trigger:** Bryce dropped the recorded transcript of two 2026-07-20 calls (Bryce + Braydn Jones + Matt Flake) naming a new standalone venture "Project Flaky Crust." Chose (via prompt) **notes + prototype** as the first deliverable and **local dir + GitHub repo now**.
