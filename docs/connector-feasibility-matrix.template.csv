@@ -1,0 +1,16 @@
+Rank (by spend),Manufacturer,Approx annual spend,Has API?,Gets EDI today? (846 inv / 832 price),Login portal? (which),Phone only?,Login creds available to share?,Priority for v1?,Notes
+1,3M,,unknown,unknown,Yes - VCOM,No,,,Known login (VCOM). Check for API/EDI.
+2,DeWalt,,unknown,unknown,Yes,No,,,Recently added login.
+3,Milwaukee,,unknown,unknown,Yes,No,,,Recently added login.
+4,Ansell,,unknown,unknown,unknown,unknown,,,
+5,Honeywell,,unknown,unknown,unknown,unknown,,,
+6,Kimberly-Clark,,unknown,unknown,unknown,unknown,,,
+7,Rust-Oleum,,unknown,unknown,unknown,unknown,,,
+8,Norton Abrasives,,unknown,unknown,unknown,unknown,,,
+9,MSA Safety,,unknown,unknown,unknown,unknown,,,
+10,,,,,,,,,
+11,,,,,,,,,
+12,,,,,,,,,
+13,,,,,,,,,
+14,,,,,,,,,
+15,,,,,,,,,
