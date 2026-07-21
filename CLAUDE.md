@@ -28,6 +28,9 @@
 - **Shipped:** [docs/AI_OUTREACH_AGENT.md](docs/AI_OUTREACH_AGENT.md) + README link. Slots into Phase 2 (build after the clean-data core is proven), tagged in the Phase 0 matrix as "AI-agent candidates."
 - **Also:** drafted the Braydn + Matt update message (in chat) covering the plan/roadmap/Q&A + this idea + the prototype link. Prototype Artifact URL: https://claude.ai/code/artifact/61a1e1fe-db7c-40fd-84ef-5b7815066413
 - **Open:** confirm what "quo.com" refers to (specific tool?) to price against. Whether to send the update via iMessage/email (held — needs Bryce's go + their contacts).
+- **Matt's reaction (positive):** "I like it! Let me see if I can get some numbers today and some logins as well." → he's pulling the feasibility data + real manufacturer portal logins. Curious about the "no system in place" services arm — **parked, talk later** (do NOT push it yet).
+- **Shipped in response:** [docs/connector-feasibility-matrix.template.csv](docs/connector-feasibility-matrix.template.csv) (blank template, seeded w/ known manufacturers; **real spend stays in a PRIVATE copy, never in this public repo**) — also sent to Bryce as a file to drop into Google Sheets + share with Matt.
+- **⚠️ Credential-handling guidance given:** Matt's logins must NOT go in group text / email / the public repo. Recommend a shared 1Password vault ("Flaky Crust — Manufacturer Logins") or Matt → Bryce direct → vault. At build time, secrets in a runtime secrets manager, never committed. (Echoes the CW public-repo token-leak lesson.)
 
 ### 2026-07-20 (PM) — Plan, roadmap, and answers to Braydn's concerns
 
