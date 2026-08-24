@@ -19,6 +19,16 @@
 
 ## Session Log
 
+### 2026-08-23 — First real manufacturer access: Milwaukee Connect requested
+
+- **Trigger:** Braydn forwarded (8/18) the Milwaukee chain — Matt asked his Milwaukee TM Joseph Lisa for a login 8/3, routed to Olivia Crowley (Industrial Channel TM, UT), who sent a Create Account link + a distribution account number. Bryce ran the signup today.
+- **State:** account created on Matt's *work* email (`mflake@indsupply.com`). Milwaukee Connect returned **"Ship-To Site Number Required"**; submitted the account number → *"Success! You can expect access within the next few days."* Portal says approval/activation is **2–3 business days**. **Re-check on/after 2026-08-26** — a success banner is a receipt, not access.
+- **Shipped:** [docs/CONNECTOR_ACCESS_LOG.md](docs/CONNECTOR_ACCESS_LOG.md) — per-brand record of access we actually hold (vs. the feasibility matrix, which records what rail *could* exist). Status key: none / requested / portal / feed / api. **No account numbers or credentials in this repo** — it's public; those stay in the vault.
+- **⚠️ Scope finding (the thing to act on):** we requested **one** ship-to-site number. Milwaukee's own help text says access to **all** ship-to-sites under a **Parent Account** requires the rep to issue a **Customer Master Buyer Contact Request**. Industrial Supply is multi-branch — a single-site login shows one counter's price/stock, which demos fine and aggregates wrong. **Ask Olivia for the parent-level Customer Master Buyer Contact Request now**, in the same thread; it's the slower request and doesn't conflict with the pending one.
+- **Also flag to Olivia:** her email said *"distribution account number"*; the portal form asks for a *"ship-to-site account number."* If those are different objects in Milwaukee's system, the pending request quietly comes back denied in a few days.
+- **Why this brand matters beyond Milwaukee:** it's connector #1, so it's the template. When access lands, answer five questions in the feasibility matrix — is our **tier net price** visible (not list)? is **live stock** visible and at what granularity? is there an **EDI 846/832 option** (ask Olivia; don't infer "no" from the UI)? is there a **documented API**? what do the **request/response shapes** look like on the wire?
+- **Pick up next:** (1) send the Olivia parent-account ask; (2) verify Milwaukee access 8/26; (3) same treatment for 3M VCOM + DeWalt, the other two logins Matt has; (4) still open since 7/21 — Matt's Connector Feasibility Matrix (top ~50 by spend) and the inside-sales click-path session.
+
 ### 2026-07-21 — AI outreach agent idea + Braydn/Matt update
 
 - **Bryce's idea:** a dedicated AI-operated email + phone number that auto-calls/emails **phone-only manufacturers** for SKUs/stock/price/lead-time, plus a **services arm** to help distributors on bad/no systems upgrade *onto our platform.*
