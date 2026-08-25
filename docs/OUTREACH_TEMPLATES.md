@@ -8,11 +8,17 @@
 
 ## The rule: every email comes from Matt, on his work address
 
-Manufacturer accounts must sit on `mflake@indsupply.com`. This is not caution about
-spam filters — **a non-distributor address will not attach to the distribution account
-at all.** Beyond that, the rep relationship is Matt's. A stranger asking a manufacturer
-for parent-account access to a distributor's pricing is a red flag; the distributor's own
-rep asking for it is routine.
+Manufacturer accounts must sit on `mflake@indsupply.com`. Not because an outside address
+is *blocked* — the Milwaukee signup ran on Bryce's address by mistake and attached to
+Industrial Supply's site anyway, returning their live net pricing. **That is the reason,
+not the counter-argument:** an outside email holding a distributor's confidential tier
+pricing is what gets an account revoked and makes the rep conversation awkward.
+
+Beyond that, the rep relationship is Matt's. A stranger asking a manufacturer for
+parent-account access to a distributor's pricing is a red flag; the distributor's own rep
+asking for it is routine.
+
+**Open item:** migrate the existing Milwaukee account off Bryce's address.
 
 **Bryce is cc, never sender.**
 

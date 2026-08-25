@@ -33,7 +33,7 @@ The [Connector Feasibility Matrix](connector-feasibility-matrix.template.csv) an
 | **Status** | `portal` + **undocumented JSON API** (see below) |
 | **As of** | 2026-08-25 — verified by logging in and pulling live prices |
 | **Scope** | **ONE ship-to site: Spanish Fork, UT.** Not the Salt Lake City HQ. Bill-to is INDUSTRIAL SUPPLY CO INC (SLC). |
-| **Account holder** | Matt Flake, `mflake@indsupply.com` (his Industrial Supply work email — required; a personal address will not attach to the distribution account) |
+| **Account holder** | ⚠️ **Bryce, not Matt.** The signup was run on Bryce's address by mistake (confirmed in the group thread 2026-08-25). It attached to Industrial Supply's site anyway and returns their live net pricing. **Migrate to Matt's work address `mflake@indsupply.com`.** |
 | **Manufacturer reps** | Olivia M Crowley — Industrial Channel TM (UT), `OliviaM.Crowley@milwaukeetool.com`, (801) 718-1773 · Joseph Lisa — Territory Manager, Mining, (262) 606-0234 |
 | **Portal** | `https://connect.milwaukeetool.com` · auth is **Auth0**, role `Connect_USCAN_Distributor` |
 | **Origin** | Matt asked Joseph Lisa for a login 2026-08-03 → routed to Olivia → Create Account link + distribution account number. Bryce ran the signup 2026-08-23. Milwaukee confirmed setup complete 2026-08-25. |
@@ -107,6 +107,22 @@ application/json`. Nothing exotic.
   it will silently quote the wrong generation of a tool.
 - **Availability is the weak half.** Price is exact; stock is a flag. If the demo
   promises "live stock," this brand cannot back that word yet.
+
+### ⚠️ The account is on the wrong email, and it worked anyway
+
+Earlier notes recorded this account as sitting on Matt's work address. It does not — the
+signup used Bryce's address. **The correction matters in both directions:**
+
+- Our stated rule was "a non-distributor address will not attach to the distribution
+  account." **Observed reality contradicts that**, at least at Milwaukee: an outside
+  address bound cleanly to Industrial Supply's ship-to site and returns their
+  confidential net pricing. Treat the rule as a strong preference, not a mechanism.
+- That is the *worse* outcome, not the better one. An outside email holding a
+  distributor's tier pricing is exactly what gets an account revoked and makes the rep
+  conversation awkward. Matt flagged the risk himself before we did.
+
+**Action:** move this account to `mflake@indsupply.com`, and put every new brand on his
+work address from the start.
 
 ### ⚠️ The scope problem is now confirmed, not predicted
 
