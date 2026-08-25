@@ -19,6 +19,17 @@
 
 ## Session Log
 
+### 2026-08-25 — Milwaukee access is LIVE, and it has a JSON API
+
+- **Trigger:** Milwaukee emailed "account setup complete" for the ship-to site. Bryce logged in and asked whether it helps. It helps a lot.
+- **Verified by logging in** (not by reading a banner): dashboard shows real Industrial Supply order history back to 2023, and Check Price returns live numbers.
+- **Answer to question #1 — our tier net price IS visible.** The pricing response carries `unitPrice` (list) and `netPrice` (Industrial Supply's net) side by side on every line. That is the fact the entire product rests on, and Milwaukee just hands it over. Figures stay in the vault; this repo is public.
+- **The big finding — Milwaukee is not a scrape.** The portal is a thin SPA over a clean JSON service at `/capi/v1/`, Auth0 bearer token, role `Connect_USCAN_Distributor`. `POST /capi/v1/quick-quote/{siteNumber}` takes a **batched SKU list** and returns 25 fields per line — price, net price, stock status, supersession. Connector #1 is days of work, not weeks. Full endpoint + payload shapes in [docs/CONNECTOR_ACCESS_LOG.md](docs/CONNECTOR_ACCESS_LOG.md).
+- **The gap — availability is a flag, not inventory.** `stockStatus` is a coarse enum (`backorder`, `discontinuedoutofstock`) plus a mostly-null `recoveryDate`. **No on-hand quantity, no per-DC breakdown, no ship-from.** Milwaukee answers "can I get it," not "how many, from where, by when." Do not promise "live stock" in a demo on this brand's data.
+- **Build against the API, never the page:** the UI leaves the price column blank on discontinued lines while the JSON returns `netPrice` for them anyway.
+- **⚠️ Scope confirmed, and it is worse than assumed.** The ship-to picker returns **exactly one** account — **Spanish Fork, UT**, not the Salt Lake City head office (SLC is only the bill-to). Two searches (`industrial`, `2000`) both return that single site. The 8/23 warning was right and is now measured.
+- **Pick up next:** (1) **Olivia — Customer Master Buyer Contact Request at parent level**, and ask in the same message whether a DC-level availability feed or EDI 846/832 exists; (2) write the Milwaukee connector as a thin client over `/capi/v1/quick-quote` and prove a 50-SKU batch; (3) 3M VCOM + DeWalt logins, same treatment; (4) still open since 7/21 — Matt's Connector Feasibility Matrix.
+
 ### 2026-08-23 — First real manufacturer access: Milwaukee Connect requested
 
 - **Trigger:** Braydn forwarded (8/18) the Milwaukee chain — Matt asked his Milwaukee TM Joseph Lisa for a login 8/3, routed to Olivia Crowley (Industrial Channel TM, UT), who sent a Create Account link + a distribution account number. Bryce ran the signup today.

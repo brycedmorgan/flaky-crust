@@ -30,60 +30,94 @@ The [Connector Feasibility Matrix](connector-feasibility-matrix.template.csv) an
 
 | | |
 |---|---|
-| **Status** | `requested` (ship-to-site approval pending) |
-| **As of** | 2026-08-23 |
+| **Status** | `portal` + **undocumented JSON API** (see below) |
+| **As of** | 2026-08-25 — verified by logging in and pulling live prices |
+| **Scope** | **ONE ship-to site: Spanish Fork, UT.** Not the Salt Lake City HQ. Bill-to is INDUSTRIAL SUPPLY CO INC (SLC). |
 | **Account holder** | Matt Flake, `mflake@indsupply.com` (his Industrial Supply work email — required; a personal address will not attach to the distribution account) |
 | **Manufacturer reps** | Olivia M Crowley — Industrial Channel TM (UT), `OliviaM.Crowley@milwaukeetool.com`, (801) 718-1773 · Joseph Lisa — Territory Manager, Mining, (262) 606-0234 |
-| **Origin** | Matt asked Joseph Lisa for a login on 2026-08-03 → routed to Olivia → she sent the Create Account link + the distribution account number (in the vault, not here). Braydn forwarded the chain to Bryce 2026-08-18. |
+| **Portal** | `https://connect.milwaukeetool.com` · auth is **Auth0**, role `Connect_USCAN_Distributor` |
+| **Origin** | Matt asked Joseph Lisa for a login 2026-08-03 → routed to Olivia → Create Account link + distribution account number. Bryce ran the signup 2026-08-23. Milwaukee confirmed setup complete 2026-08-25. |
 
-### Where it stands
+### Verified 2026-08-25 — the five questions, answered
 
-Account created against Matt's work email. Milwaukee Connect then returned
-**"Ship-To Site Number Required"** — the account exists but is not yet bound to a
-site. Submitted the distribution account number Olivia supplied; the portal returned
-*"Success! You can expect access within the next few days."* Its own copy says
-**approval and activation take 2–3 business days**.
+**1. Is our tier net price visible? — YES, and it is unambiguous.**
+The pricing response returns **both** `unitPrice` (list) and `netPrice` (Industrial
+Supply's actual net) on the same line. This is the single fact the whole product
+depends on, and Milwaukee hands it over in one call. *Figures stay in the vault —
+this repo is public.*
 
-⚠️ **Nothing is verified until someone logs in and sees SKUs.** A success banner is a
-receipt for a request, not proof of access. Re-check on/after **2026-08-26**.
+**2. Is live stock visible, and at what granularity? — PARTIALLY. This is the gap.**
+Availability is a **coarse status enum on one line item**, not inventory. Observed
+values: `backorder`, `discontinuedoutofstock`. There is a `recoveryDate` /
+`recoveryDateMessage` pair for ETA (null on everything tested). There is **no
+quantity on hand, no per-DC breakdown, and no ship-from location.** So Milwaukee
+answers *"can I get it?"* but not *"how many, from where, by when."* Ask Olivia
+whether a DC-level availability feed exists — do not conclude "no" from this UI.
 
-### The scope problem — this is the real ask
+**3. Is there an EDI/feed option? — NOT YET ANSWERED. Still an Olivia question.**
+Nothing in the portal UI offers 846/832 self-service. "Pricing & Publications" in the
+footer is a JS-driven link worth opening next session. Bulk intake clearly exists in
+some form — "Create a New Order" advertises **Excel order import**.
 
-The portal's own help text draws the distinction we care about:
+**4. Is there a documented API? — No documented one. There is an undocumented one, and it is good.**
+The portal is a thin SPA over a clean JSON service at **`/capi/v1/`**. Endpoints seen:
 
-> "If you need access to **all ship-to-site account numbers underneath a Parent
-> Account**, reach out to your Milwaukee Rep, have them approve and issue a
-> **Customer Master Buyer Contact Request** on your behalf."
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/capi/v1/sites/{siteNumber}/billToSite` | GET | resolve ship-to → bill-to |
+| `/capi/v1/products/search/suggest` | POST | SKU / product-name typeahead against the live catalog |
+| `/capi/v1/quick-quote/{siteNumber}` | POST | **price + availability, batched, many SKUs per call** |
 
-What we submitted is **one** ship-to-site number. Industrial Supply is a multi-branch
-distributor. A single-site login shows one branch's pricing and availability — that
-demos fine and aggregates badly, because the product's promise is *the distributor's*
-position, not *a counter's* position.
+**5. What does the data look like on the wire?**
 
-**Action:** ask Olivia for a **Customer Master Buyer Contact Request** at the parent
-account level. Do it now, in the same thread, while the single-site request is still
-processing — the two are not in conflict and the parent request is the slower one.
+Request to `quick-quote` — batched, trivially generated:
 
-Also worth confirming with Olivia: Milwaukee's field email used the phrase
-*"distribution account number"* while the portal form asks for a *"ship-to-site
-account number."* If those are different objects in Milwaukee's system, the pending
-request may bind to the wrong one and simply come back denied in a few days.
+```json
+{ "organizationCode": "MT",
+  "items": [ { "lineNumber": 0, "sku": "276720", "quantity": 1 },
+             { "lineNumber": 1, "sku": "285320", "quantity": 1 } ] }
+```
 
-### What to look for once access lands
+Response — one object per line, 25 fields, no HTML to scrape:
 
-This is our first real portal, so it doubles as the template for every brand after it.
-Log the answers in the feasibility matrix:
+```
+lineNumber · sku · description · quantity
+expectedSku · actualSku · isTransition · isReplacement · replacementSku
+stockStatus · unitPrice · netPrice · totalPrice
+pricingErrorCode · pricingErrorMessage
+itemAvailabilityErrorCode · itemAvailabilityErrorMessage
+restrictedDescription · isValid · errorFlags
+minimumQuantityAllowed · maximumQuantityAllowed · quantityMultipleAllowed
+recoveryDate · recoveryDateMessage
+```
 
-1. **Is our tier price visible?** Does the portal show Industrial Supply's actual
-   Tier-3 net price, or list price only? (The whole product depends on the former.)
-2. **Is live stock visible, and at what granularity?** Per-DC on-hand, or a
-   yes/no in-stock flag?
-3. **Is there an EDI/feed option in the account settings?** 846 inventory / 832 price
-   catalog. Ask Olivia directly — do not conclude "no" from the UI.
-4. **Is there any documented API or integration page?** Vendor portals frequently
-   hide one behind a support request.
-5. **What does the data actually look like on the wire?** Capture request/response
-   shapes while browsing — that determines whether a connector is a day or a month.
+Auth is a `Bearer` JWT from Auth0 in the `authorization` header. `Content-Type:
+application/json`. Nothing exotic.
+
+### What this actually means for the build
+
+- **Milwaukee is a one-day connector, not a one-month one.** No scraping, no headless
+  browser. Authenticate, POST a SKU list, read `netPrice` + `stockStatus`.
+- **The API returns more than the screen shows.** The UI leaves the price column blank
+  on discontinued lines; the JSON carries `netPrice` for them anyway. Build against the
+  service, never against the rendered page.
+- **SKUs normalize by stripping dashes** — `2767-20` → `276720`, `48-11-1862` →
+  `48111862`. Also note `expectedSku` can differ from `actualSku` with `isTransition:
+  true` (superseded part). A connector must carry the transition/replacement fields or
+  it will silently quote the wrong generation of a tool.
+- **Availability is the weak half.** Price is exact; stock is a flag. If the demo
+  promises "live stock," this brand cannot back that word yet.
+
+### ⚠️ The scope problem is now confirmed, not predicted
+
+Searching the ship-to picker for both `industrial` and `2000` returns **exactly one
+account: Spanish Fork, UT**. Everything above is one branch's position.
+
+**Action, unchanged and now urgent:** ask Olivia for a **Customer Master Buyer Contact
+Request** at the **parent** account level. Also confirm whether Milwaukee's
+"distribution account number" and the portal's "ship-to-site account number" are the
+same object — the site we got bound to is Spanish Fork, not the SLC head office, which
+suggests they are not.
 
 ### Escalation path
 
