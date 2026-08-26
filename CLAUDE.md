@@ -34,6 +34,16 @@
 - **Still untested end-to-end:** the connector's own HTTP layer (auth header, retry, real 50-SKU batching over the wire). That needs a bearer token nobody has staged. The mapping — the part most likely to be wrong — is now confirmed against live data.
 - **Pick up next:** run one real 50-SKU batch once a token is to hand; then 3M VCOM and DeWalt against the same interface — three brands on one contract is the proof it generalizes.
 
+### 2026-08-26 — Session close: connector #1 shipped, outreach sent, roadmap re-cut
+
+**Where this stands for whoever picks it up cold:** the biggest technical risk in the project is retired. A distributor's real tier net price *is* retrievable programmatically from a manufacturer with no published API — proven at Milwaukee, twice, with a stable control. Connector #1 is written, tested and validated against live data. **Nothing is blocked on code.** Everything is blocked on Matt: the feasibility matrix (open since 21 July), the EDI answer, and a named internal owner at Industrial Supply.
+
+- **[docs/ROADMAP.md](docs/ROADMAP.md) re-cut** against what we learned: Phase 0 gains two items that were never in the plan — **per-brand access administration** (~50 rep conversations, the real long pole, and the moat) and **a named internal sponsor** (was Phase 3, now a Phase 0 blocker). Phase 1's connector framework is marked done. Risk register gains three measured risks and the ToS row is now fact, not assumption.
+- **The scope correction worth re-reading:** the PRD promises price + stock + lead time + ship-from. Brand #1's best-case rail gives price exactly, stock coarsely, and lead time / ship-from **not at all**. Lead with price; source inventory from a second rail. Do not demo on-hand numbers we cannot source.
+- **Two emails sent to Matt** (`bryce@gullstack.com` → `mflake@indsupply.com`, both confirmed `SENT`): the Olivia parent-scope draft, and the Milwaukee CX draft to move the Connect account off Bryce's personal address. Both go out **from Matt**, not Bryce.
+- **Open with Matt, all three unanswered:** who internally owns the yes; which 3–5 small/old-software vendors he'll pull logins from (pick ones they buy real volume from); confirmation both emails went out.
+- **⚠️ Housekeeping:** a Milwaukee bearer token was exposed in a session screenshot 2026-08-26 and left to expire unused. Not reused, not written to disk. The HTTP-layer test it would have enabled remains a known gap — say so, don't imply it's covered.
+
 ### 2026-08-26 — Outreach sent to Matt; Milwaukee account-email fix is open
 
 - **Sent (from `bryce@gullstack.com` → `mflake@indsupply.com`, confirmed `SENT`):** the Olivia scope-up draft for Matt to fire from his work address, the disclosure that the Connect signup ran on Bryce's email, and the "who at Industrial Supply owns the yes" question. One email, not three.

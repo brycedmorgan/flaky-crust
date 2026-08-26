@@ -26,6 +26,9 @@ Don't try to boil the ocean (4,200 manufacturers) or solve the hardest data sour
 **Goal: know exactly what we're building and whether the data is reachable.**
 
 - [x] Concept captured + clickable prototype (done 2026-07-20) — the thing to react to.
+- [x] **First real manufacturer access proven end to end (Milwaukee, 2026-08-25/26).** A distributor's actual tier net price is retrievable programmatically from a brand with no published API. This retired the single biggest risk in the project — see [CONNECTOR_ACCESS_LOG.md](CONNECTOR_ACCESS_LOG.md). **n=1**: it does not stand in for the matrix.
+- [ ] ⚠️ **NEW — per-brand access administration.** Not in the original plan, and it turned out to be the long pole. Every brand needs an account on the distributor's own email domain, scoped to the **parent** account rather than one branch, blessed by a **named rep**. That is ~50 rep conversations and it is people-work, not code. It is also the moat. Checklist + email templates: [OUTREACH_TEMPLATES.md](OUTREACH_TEMPLATES.md).
+- [ ] ⚠️ **NEW — a named internal owner at Industrial Supply.** Was a Phase 3 concern; it is now a Phase 0 blocker. Asking a manufacturer to bless third-party access to Industrial Supply's pricing is a company-level ask, and until someone internal has signed up for this, Matt personally carries it. Hold that ask until then.
 - [ ] **Matt working session #1 — the connector matrix.** For the top ~50 manufacturers *by Industrial Supply's annual spend*, mark how their data is reachable: open API? EDI 846/832 today? login portal only (which ones — 3M VCOM, DeWalt, Milwaukee already have logins)? phone only? → produces the **Connector Feasibility Matrix** (a spreadsheet). This is the deliverable that de-risks everything.
 - [ ] **Inside-sales rep session.** Sit a real inside-sales rep down: what exact fields do they pull every day, and what's the actual click-path today? Call gave us **part #, description, quantity, price, lead time** — confirm + rank, and catch anything missing (min order qty, pack size, substitutes, ship-from).
 - [ ] **EDI check (potentially a shortcut).** Does Industrial Supply *already* receive EDI 846 (inventory) / 832 (price catalog) from its top manufacturers, and where do those files land? If yes, v1 ingestion may be "parse files they already get," not "integrate 50 APIs."
@@ -33,12 +36,22 @@ Don't try to boil the ocean (4,200 manufacturers) or solve the hardest data sour
 
 **Exit gate:** we have the Connector Feasibility Matrix + confirmed field list. If ≥10 high-spend manufacturers are reachable by API/EDI, we proceed to Phase 1.
 
+> **Scope correction from Milwaukee (2026-08-26).** The PRD promises four facts per part:
+> price, stock, lead time, ship-from. Brand #1's *best-case* rail delivers price exactly,
+> stock as a coarse flag, and **lead time and ship-from not at all**. So either v1 leads
+> with price — "every brand, your real price, one search box", which is provably
+> deliverable and a serious product on its own — or inventory comes from a second rail
+> (EDI 846, or Industrial Supply's own system). Probably both. What we must not do is
+> demo on-hand quantities we cannot source.
+
 ---
 
 ## Phase 1 — Single-tenant MVP for Industrial Supply  ·  ~6–10 weeks
 **Goal: one real distributor's inside-sales team uses it daily and it saves measurable time.**
 
-- [ ] **Connector framework** — the pluggable interface + a job runner that refreshes each connected manufacturer on a schedule (~15 min for live sources).
+- [x] **Connector framework — built 2026-08-26.** [connectors/interface.js](../connectors/interface.js) plus connector #1 ([connectors/milwaukee/](../connectors/milwaukee/)), 10 passing tests, and a CLI ([bin/quote.js](../bin/quote.js)). Zero dependencies. Validated against a live Milwaukee response: 8/8 mapping checks. Two rules the interface *enforces*: every line carries source/scope/`asOf`, and what we do not have is `null`, never `0`.
+- [ ] **Job runner** — scheduled refresh per connected manufacturer (~15 min for live sources). Not started; the connector layer runs on demand today.
+- [ ] **Prove the framework generalizes** — 3M VCOM and DeWalt against the same interface. Three brands on one contract is the evidence; one brand is an anecdote.
 - [ ] **Ingest + normalize** the 10–15 cleanest, highest-spend manufacturers into one unified catalog model (product, distributor-specific price, stock, lead time, ship-from).
 - [ ] **The console** — the production version of the prototype: unified search, *your*-price with tier, live stock, lead time, ship-from. This is the daily driver.
 - [ ] **Auth + credential vault + one-time "connect a manufacturer" wizard** — for login-only sources (BRAYDN_QA §1–2).
@@ -90,15 +103,25 @@ Lean and AI-forward, since AI is the thing that makes this buildable now.
 |---|---|---|
 | Too few manufacturers expose API/EDI → heavy reliance on brittle logins | High | Phase 0 matrix quantifies it *before* we build. Prioritize API/EDI manufacturers for the MVP; treat login/scrape as fill-in. |
 | Storing distributor credentials = security + liability | High | Tokens-not-passwords, vault-encrypted, explicit consent, SOC-2-minded from day one. Public repo carries **zero** secrets/sample-only data (already true). |
-| Manufacturer ToS forbids automated access | Med | Prefer official API/EDI/OAuth. For login-only, it's the distributor's *own* credentials + consent (Plaid precedent), but confirm per-brand ToS before scaling. |
+| Manufacturer ToS forbids automated access | Med | **Checked at Milwaukee 2026-08-26: no anti-bot, anti-scraping or automated-access clause.** They do reserve commercial use of the site to what is "expressly permitted ... in writing", so the durable move is written blessing from the rep — the same conversation as the parent-account ask. Caveat: that is the public site's legal page; a separate signed distributor agreement may exist. Confirm per brand before scaling. |
+| **Access is scoped to one branch, so aggregates are wrong while looking right** | High | Measured at Milwaukee: the login covers one ship-to site, not the distributor. Ask for parent scope **at signup**, and print the scope on every quote. The connector does this — `scope` is a required field. |
+| **The product promises data the best-case rail does not carry** | High | Lead with price, which is provable. Source stock/lead-time from EDI or the distributor's ERP. Never render an unknown as a number. |
+| **One person's mailbox holds every manufacturer account** | Med | Correct for now (Matt's work address). At sponsor time, move to a shared distribution alias so resets and MFA do not funnel through one employee. |
 | Tiered pricing wrong = distributor quotes a customer the wrong price | High | Price is always identity-scoped + timestamped + source-attributed; show "as of" + source; never blend tiers. |
 | Cultural blowback (perceived headcount threat) at beta | Med | Augment-don't-replace framing; measure *reps freed for relationships*, not *reps eliminated*. |
 | Building 50 connectors is a slog | Med | Connector framework + start with 10–15; EDI/PunchOut may cover many at once via one parser. |
 
 ---
 
-## Immediate next actions (this week)
-1. **Bryce:** share the prototype link + this plan with Braydn & Matt; keep the Kinsey project first per the call, but get Matt's working session on the calendar.
-2. **Matt:** start the **Connector Feasibility Matrix** (top ~50 manufacturers by spend × data-reachability) and confirm whether Industrial Supply already receives EDI 846/832.
-3. **Matt:** line up 30–60 min with an inside-sales rep to confirm the daily field list + click-path.
-4. **All:** decide the business-model anchor (subscription-first — see BRAYDN_QA §6) so we can put a number in front of the internal contact.
+## Immediate next actions
+
+*Updated 2026-08-26. Ordered by what unblocks the most, not by chronology.*
+
+1. **Matt — the Connector Feasibility Matrix.** Top ~50 manufacturers by spend × API / EDI today / login-only / phone-only. **Open since 21 July.** Still the only thing that sizes the build, and Milwaukee turning out easy is one data point, not a trend.
+2. **Matt — the EDI answer.** Does Industrial Supply already receive 846/832, from whom, and where do the files land? Now doubly important: it is the likeliest source of the stock and lead-time data portals withhold.
+3. **Matt — a named internal owner.** Who signs. Gates the programmatic-access ask at every brand.
+4. **Matt → Olivia Crowley (Milwaukee).** Parent-account access via a Customer Master Buyer Contact Request, plus whether a warehouse-level or EDI feed exists. Draft sent to Matt 2026-08-26; comes from him, not us.
+5. **Matt → Milwaukee CX.** Move the Connect account off the personal address it was created under and onto his work address. Draft sent.
+6. **Matt — rep contacts for the top 10 brands,** and 3–5 small/old-software vendors he actually buys volume from. The scrappy vendors are the informative sample; Milwaukee is the best case.
+7. **Bryce/Braydn — 3M VCOM and DeWalt** on the existing interface once those logins land.
+8. **All — the business-model anchor.** We still have no number to put in front of a decision-maker.
