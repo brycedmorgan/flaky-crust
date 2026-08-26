@@ -121,8 +121,13 @@ signup used Bryce's address. **The correction matters in both directions:**
   distributor's tier pricing is exactly what gets an account revoked and makes the rep
   conversation awkward. Matt flagged the risk himself before we did.
 
-**Action:** move this account to `mflake@indsupply.com`, and put every new brand on his
-work address from the start.
+**Action (in flight, 2026-08-26):** Matt requests the move to `mflake@indsupply.com` from
+Milwaukee customer service (`CXhelp@milwaukeetool.com` / 1-800-729-3878). The request comes
+from **Matt, not Bryce** — a distributor asking their vendor to move an account to the right
+internal address is routine; an outside party disclosing they created an account on a
+distributor's portal routes to the rep and the channel team. The address currently on the
+account is Bryce's personal Gmail; it is in the vault notes, not here, because this repo is
+public. Every new brand goes on Matt's work address from the start.
 
 ### ⚠️ The scope problem is now confirmed, not predicted
 
