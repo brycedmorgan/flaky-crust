@@ -10,14 +10,26 @@
 
 ## Tech Stack
 - Prototype: single-file static HTML/CSS/vanilla-JS ([prototype/index.html](prototype/index.html)). No build.
-- Nothing else chosen yet. Stack decision deferred until the API-vs-login mix is validated with Matt.
+- Connectors: plain ES modules, zero dependencies, Node's built-in test runner. No framework chosen yet — the app stack decision still waits on the feasibility matrix, but the connector layer does not need it.
 
 ## Repo layout
 - `docs/` — PRD + call notes (source of truth for the concept)
+- `connectors/` — one interface, one module per manufacturer ([connectors/README.md](connectors/README.md))
+- `bin/` — `quote.js`, prices a part list against a live connector
 - `prototype/` — clickable demo
-- No app framework yet.
 
 ## Session Log
+
+### 2026-08-26 (PM) — Connector #1 is built and tested
+
+- **Shipped:** [connectors/interface.js](connectors/interface.js) (the contract), [connectors/milwaukee/index.js](connectors/milwaukee/index.js) (connector #1), [connectors/milwaukee/index.test.js](connectors/milwaukee/index.test.js) (9 tests, all passing), [bin/quote.js](bin/quote.js) (CLI), `.env.example`, [connectors/README.md](connectors/README.md). Plain ES modules, **zero dependencies**.
+- **Two rules the interface enforces, not just documents:** every line carries `source`, `scope` and `asOf`; and **what we do not have is `null`, never `0`** — `onHand: 0` tells a rep the shelf is empty, which Milwaukee never actually said. There is a test for it.
+- **Handles the traps the portal taught us:** SKUs normalize by stripping separators (`2767-20` → `276720`); superseded parts return under a *different* part number with a transition flag and are surfaced as an explicit warning rather than quoted silently; net price is read from the service even on lines where the UI blanks the price column; 50 SKUs per request with backoff on 429/5xx; a 401 raises `AuthError` telling you the token expired instead of returning an empty list.
+- **Auth is caller-supplied and never stored.** `MILWAUKEE_TOKEN` / `MILWAUKEE_SITE` come from the environment. The module reads no credential store, logs no token, persists nothing. `.env` is gitignored; this repo is public.
+- **Test fixtures are the real 2026-08-25 response shape with prices replaced by round stand-ins** — the real figures are Industrial Supply's.
+- ⚠️ **Run the test FILE, not the directory.** `node --test connectors/milwaukee/` reports "1 test, 1 pass" and silently runs none of the nine. `node --test connectors/milwaukee/index.test.js` is correct. Verified the suite actually bites by mutating `onHand: null` → `0` and watching it fail.
+- **Not yet run against the live API** — that needs a bearer token from a signed-in session, which nobody has staged. Everything above is verified against the captured payload shape, not against Milwaukee's servers.
+- **Pick up next:** run one real 50-SKU batch once a token is to hand; then 3M VCOM and DeWalt against the same interface — three brands on one contract is the proof it generalizes.
 
 ### 2026-08-26 — Outreach sent to Matt; Milwaukee account-email fix is open
 
