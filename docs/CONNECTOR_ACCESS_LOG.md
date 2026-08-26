@@ -47,8 +47,8 @@ depends on, and Milwaukee hands it over in one call. *Figures stay in the vault 
 this repo is public.*
 
 **2. Is live stock visible, and at what granularity? — PARTIALLY. This is the gap.**
-Availability is a **coarse status enum on one line item**, not inventory. Observed
-values: `backorder`, `discontinuedoutofstock`. There is a `recoveryDate` /
+Availability is a **coarse status enum on one line item**, not inventory. All three
+observed values: `instock`, `backorder`, `discontinuedoutofstock`. There is a `recoveryDate` /
 `recoveryDateMessage` pair for ETA (null on everything tested). There is **no
 quantity on hand, no per-DC breakdown, and no ship-from location.** So Milwaukee
 answers *"can I get it?"* but not *"how many, from where, by when."* Ask Olivia
@@ -67,6 +67,12 @@ The portal is a thin SPA over a clean JSON service at **`/capi/v1/`**. Endpoints
 | `/capi/v1/sites/{siteNumber}/billToSite` | GET | resolve ship-to → bill-to |
 | `/capi/v1/products/search/suggest` | POST | SKU / product-name typeahead against the live catalog |
 | `/capi/v1/quick-quote/{siteNumber}` | POST | **price + availability, batched, many SKUs per call** |
+
+**Re-verified live 2026-08-26.** A second batch through the portal returned the same
+numbers for the same part as the day before — the data is stable, and the first capture
+was not a fluke. That run also produced the missing `instock` value and showed
+`errorFlags` populated (`["Discontinued"]`) for the first time. The connector was run
+against that live payload: **8/8 mapping checks pass.**
 
 **5. What does the data look like on the wire?**
 

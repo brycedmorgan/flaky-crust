@@ -23,6 +23,19 @@ const LIVE_SHAPE = {
       recoveryDate: null, recoveryDateMessage: null,
     },
     {
+      lineNumber: 2, sku: '290420',
+      description: 'M18 FUEL™ 1/2" Hammer Drill/Driver - Cordless Power Tool',
+      quantity: 1, expectedSku: '290420', actualSku: '290420',
+      isTransition: false, isReplacement: false, replacementSku: null,
+      stockStatus: 'instock',
+      unitPrice: 300.0, netPrice: 150.0, totalPrice: 150.0,
+      pricingErrorCode: null, pricingErrorMessage: null,
+      itemAvailabilityErrorCode: null, itemAvailabilityErrorMessage: null,
+      restrictedDescription: null, isValid: true, errorFlags: [],
+      minimumQuantityAllowed: 0, maximumQuantityAllowed: 0, quantityMultipleAllowed: 0,
+      recoveryDate: null, recoveryDateMessage: null,
+    },
+    {
       lineNumber: 1, sku: '48111862',
       description: 'M18™ REDLITHIUM™ HIGH OUTPUT™ XC6.0 Battery Pack (2 Pk)',
       quantity: 2, expectedSku: '48111862ZY', actualSku: '48111862',
@@ -117,6 +130,17 @@ test('a missing line reads as unknown, not unavailable', async () => {
   assert.equal(line.availability.status, 'unknown');
   assert.equal(line.netPrice, null);
   assert.ok(line.warnings.some((w) => w.includes('not unavailable')));
+});
+
+test('maps every stockStatus value seen on the wire', async () => {
+  // "instock" confirmed live 2026-08-26; the other two 2026-08-25.
+  const lines = await connector(stubFetch(LIVE_SHAPE)).quote([
+    { sku: '2767-20' }, { sku: '48-11-1862', quantity: 2 }, { sku: '2904-20' },
+  ]);
+  assert.equal(lines[0].availability.status, 'discontinued');
+  assert.equal(lines[1].availability.status, 'backorder');
+  assert.equal(lines[2].availability.status, 'in_stock');
+  assert.equal(lines[2].netPrice, 150.0);
 });
 
 test('an expired token fails loudly and says what to do', async () => {

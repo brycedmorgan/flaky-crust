@@ -28,7 +28,10 @@
 - **Auth is caller-supplied and never stored.** `MILWAUKEE_TOKEN` / `MILWAUKEE_SITE` come from the environment. The module reads no credential store, logs no token, persists nothing. `.env` is gitignored; this repo is public.
 - **Test fixtures are the real 2026-08-25 response shape with prices replaced by round stand-ins** — the real figures are Industrial Supply's.
 - ⚠️ **Run the test FILE, not the directory.** `node --test connectors/milwaukee/` reports "1 test, 1 pass" and silently runs none of the nine. `node --test connectors/milwaukee/index.test.js` is correct. Verified the suite actually bites by mutating `onHand: null` → `0` and watching it fail.
-- **Not yet run against the live API** — that needs a bearer token from a signed-in session, which nobody has staged. Everything above is verified against the captured payload shape, not against Milwaukee's servers.
+- **Validated against live data, same day.** Ran a second real batch through the portal in Bryce's session (4 parts, Spanish Fork) and fed the captured response through the connector: **8/8 mapping checks pass** — `instock` → `in_stock`, `discontinuedoutofstock` → `discontinued`, net price survives a discontinued line, no line invents an on-hand count, every line stamped with source/scope/asOf.
+- **The control held.** 2767-20 returned identical list and net figures to the 8/25 capture. The data is stable and the first read was not a fluke.
+- **Two new facts:** `instock` is the third `stockStatus` value (now covered by a test), and `errorFlags` does populate — `["Discontinued"]` — where it was empty on everything seen 8/25.
+- **Still untested end-to-end:** the connector's own HTTP layer (auth header, retry, real 50-SKU batching over the wire). That needs a bearer token nobody has staged. The mapping — the part most likely to be wrong — is now confirmed against live data.
 - **Pick up next:** run one real 50-SKU batch once a token is to hand; then 3M VCOM and DeWalt against the same interface — three brands on one contract is the proof it generalizes.
 
 ### 2026-08-26 — Outreach sent to Matt; Milwaukee account-email fix is open
