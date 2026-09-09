@@ -20,6 +20,17 @@
 
 ## Session Log
 
+### 2026-09-09 — Plan + asks texted to Matt and Braydn (13 days of silence broken)
+
+- **Status check first, and it was flat.** Repo clean at the 8/26 commit, Notion last edited 8/26, no email reply from Matt since the two drafts went to him 8/26, and the group text silent since 8/25. Nothing had moved in 13 days. The Connector Feasibility Matrix passed **49 days open** (asked 21 July).
+- **Read on it:** 49 days is not a delay, it is an answer about capacity. Matt does this around a full-time account-manager job. Stop re-asking for homework; make the ask small enough to answer on a phone keyboard.
+- **Sent two iMessages to the group** (chat `any;+;51e142cc108640c48d7395ee4bd8847b`; Braydn 801-400-8617, Matt 801-502-2680) at 14:54 on 2026-09-09. Verified in `chat.db`: both rows present, `is_from_me=1`, `is_sent=1`, `error=0`. Note `is_delivered` reads 0 on outgoing rows in this database generally — it is not a usable signal, do not treat it as failure.
+- **Message 1 — the plan in writing.** Price first (stock and lead time come from EDI, not the portals); three brands not fifty (Milwaukee done, DeWalt and 3M next); the three things every brand needs (work-email login, parent scope, named rep) named as the real work *and* the moat; then a priced demo to whoever owns the yes. Speed claim kept to a fact we can defend: Milwaukee's connector took one working session once the login worked.
+- **Message 2 — five asks, each answerable in one line.** (1) top 10 brands by spend, **names only, no dollar figures**; (2) rep name + email for DeWalt and 3M; (3) did the Olivia parent-scope email go out, yes/no; (4) did the Milwaukee CX account-move note go out, yes/no; (5) one EDI 846/832 question written so Matt can **forward it** to whoever runs the ordering system. Plus, unpressured, the name of who can approve a paid pilot.
+- **Deliberately cut:** no phone call (Bryce's call — he does not want one), no deadline, no mention of the 49 days, and the full top-50 spend list shrank to ten brand names. A text with six heavy asks gets zero answers.
+- **Pick up next:** wait for Matt's replies and log them per-brand in `docs/CONNECTOR_ACCESS_LOG.md`. The moment DeWalt or 3M logins exist, build those two connectors against `connectors/interface.js` — three brands on one contract is the proof it generalizes. Still unstaged: a Milwaukee bearer token for the one untested piece, the connector's HTTP layer.
+
+
 ### 2026-08-26 (PM) — Connector #1 is built and tested
 
 - **Shipped:** [connectors/interface.js](connectors/interface.js) (the contract), [connectors/milwaukee/index.js](connectors/milwaukee/index.js) (connector #1), [connectors/milwaukee/index.test.js](connectors/milwaukee/index.test.js) (9 tests, all passing), [bin/quote.js](bin/quote.js) (CLI), `.env.example`, [connectors/README.md](connectors/README.md). Plain ES modules, **zero dependencies**.
