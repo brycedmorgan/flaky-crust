@@ -161,7 +161,7 @@ questions. Olivia for anything account-scope or commercial.
 | **As of** | 2026-10-13 — verified by logging in and pricing one SKU live |
 | **Scope** | **ONE sold-to: Industrial Supply BR01, Salt Lake City, marked "All".** This is the head office, not a branch. Better scope than Milwaukee on day one. |
 | **Account holder** | Matt, on his work email `mflake@indsupply.com`. Correct from the start. |
-| **Manufacturer rep** | Matt has an outside rep (unnamed) who sends account setup up to SBD corporate. 2026-10-13: asked Matt to have him send corporate two questions: EDI 832/846 for distributors, and OK to pull our pricing from SBD365 automatically. |
+| **Manufacturer rep** | Matt has an outside rep (unnamed) who sends account setup up to SBD corporate. 2026-10-13: asked Matt to have him send corporate two questions: EDI 832/846 for distributors, and OK to pull our pricing from SBD365 automatically. Narrowed same day: ask for the **846 only** (stock count, the one DeWalt gap). We already see price, so the 832 adds no data; it only matters for the deferred permission question. |
 | **Portal** | `https://sbd365.sbdinc.com` · Salesforce B2B Commerce (LWR). Covers every SBD brand: DeWalt, Stanley, Lenox, Proto, Irwin, Bostitch, Porter-Cable, Black+Decker, Craftsman. |
 | **Origin** | Matt requested logins 2026-09-28; emailed DeWalt + 3M logins to Bryce 2026-10-06. Bryce logged in 2026-10-13. |
 
