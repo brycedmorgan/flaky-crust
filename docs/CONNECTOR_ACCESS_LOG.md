@@ -203,12 +203,45 @@ from the rep before we build the connector. Until then the connector stays a des
 
 ---
 
-## 3M
+## 3M — "bCom" (order.3m.com)
 
-`requested` — login from Matt 2026-10-06; Bryce waiting on 3M's verification step
-2026-10-13.
+| | |
+|---|---|
+| **Status** | `portal` + **batched REST API behind the UI** (see below) |
+| **As of** | 2026-10-13 — verified by logging in and pricing a search page live |
+| **Scope** | **Parent scope.** Agreement is "3M United States – Gen Industry Channel," sold-to Industrial Supply Co, Salt Lake City. The ship-to picker holds **109 sites**: Industrial Supply's own branches plus its customers' job sites (drop-ship). That customer list is confidential. Keep it out of this repo. |
+| **Account holder** | Matt, on his work email `mflake@indsupply.com`. Bryce completed 3M's verification step 2026-10-13. |
+| **Manufacturer rep** | Unknown. Portal lists "My 3M Contacts" under Account; read it next session. |
+| **Portal** | `https://order.3m.com/store/` · SAP Commerce (Hybris) storefront over an OCC-style REST API at `/bcomv2/v2/bComUSSite/users/{userId}/...` |
+
+### Verified 2026-10-13 — the best rail of the three
+
+**1. Our tier price? — YES, list AND net, side by side, on the search page.**
+Every result shows `List: $x / Case` and `Net: $y / Case`. That proves net, not list,
+which neither Milwaukee's screen nor DeWalt's could show this cleanly. There is also an
+optional **SPA #** field (special pricing agreement), so contract pricing on top of
+net exists. Figures stay in the vault.
+
+**2. Stock? — YES, an on-hand count.** "In Stock: N Case" per item, plus
+`Stock Type` (Standard / Make To Order) and `Product Status` (Active / Discontinued).
+First brand with a real quantity, not a flag.
+
+**3. Lead time? — YES.** "Est. Lead Time: N Working Days" on every result, and
+"Check Availability" returns an **estimated delivery date to the selected ship-to**.
+No DC / ship-from name seen yet. DeWalt is still the only brand that names the DC.
+
+**4. Batching? — YES.** The page calls `productdetails/productPrice?materialIDs=a,b,c,d&materialUnits=CS,...`
+and `productdetails/productAvailability?materialIDs=...` in **batches of 4** keyed on the
+3M stock number (`700...` / `710...`). Searchable by 3M catalog #, 3M stock #, the
+distributor's own catalog #, or UPC. Minimum order quantity and increment come back too.
+
+**5. EDI? — not asked yet.** 3M is a major EDI shop; the footer lists "Electronic Order
+Entry" and "Price Report" under Account. Read both next session before asking anyone.
+
+**Same rule as DeWalt:** not scripted. Calls were observed from normal page use only.
+Get 3M's written OK (or EDI files) before building a connector against the REST API.
 
 ## Every other brand
 
-`none` — Matt put in 3 login requests 2026-09-28; 2 came back (DeWalt, 3M). The third
+`none` — Matt put in 3 login requests 2026-09-28; 2 came back (DeWalt, 3M), both verified 2026-10-13. The third
 brand is unnamed. Record it here when it lands.
