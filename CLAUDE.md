@@ -27,6 +27,7 @@
 - **Two caveats:** only one price field comes back, so "net vs list" is not yet proven; and pricing is one SKU per simulation, so a 50-line quote is 50 calls.
 - **Blocked on purpose:** the auto-mode classifier refused a scripted replay of SBD's private pricing endpoint. Get written OK from the SBD rep before building connector #2.
 - **3M:** Bryce is waiting on 3M's verification step.
+- **Group text sent (verified in chat.db):** DeWalt update, then Matt's reply: his outside SBD rep forwards setup to corporate. Asked Matt to have the rep send corporate two questions: EDI 832/846 for distributors, and OK to pull pricing from SBD365 automatically.
 - **Pick up next:** (1) 3M login once verified, same five questions; (2) Matt names the SBD rep, and we ask for written OK plus EDI 832/846; (3) check one DeWalt price against an Industrial Supply invoice for net vs list; (4) test a quantity above stock; (5) the third requested brand.
 
 ### 2026-09-09 — Plan + asks texted to Matt and Braydn (13 days of silence broken)
