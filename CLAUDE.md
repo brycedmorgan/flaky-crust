@@ -20,6 +20,15 @@
 
 ## Session Log
 
+### 2026-10-13 — DeWalt (SBD365) priced live; 3M waiting on verification
+
+- **The logins were in Bryce's personal Gmail all along.** Matt emailed DeWalt + 3M logins to `brycedmorgan@gmail.com` on 2026-10-06 (subject "Log ins"). Bryce replied "On it" and nothing moved for a week. Braydn asked about them 2026-10-13. Passwords are in that email in plain text; move them to the vault and change them.
+- **DeWalt verified.** SBD365 is Salesforce B2B Commerce. Scope is the SLC head office (BR01, "All"), not a branch. "Get Price" runs a live SAP simulation and returns price **plus ship-from DC, schedule date and pending-quantity flag**. First brand that answers "from where, by when." Details in [docs/CONNECTOR_ACCESS_LOG.md](docs/CONNECTOR_ACCESS_LOG.md).
+- **Two caveats:** only one price field comes back, so "net vs list" is not yet proven; and pricing is one SKU per simulation, so a 50-line quote is 50 calls.
+- **Blocked on purpose:** the auto-mode classifier refused a scripted replay of SBD's private pricing endpoint. Get written OK from the SBD rep before building connector #2.
+- **3M:** Bryce is waiting on 3M's verification step.
+- **Pick up next:** (1) 3M login once verified, same five questions; (2) Matt names the SBD rep, and we ask for written OK plus EDI 832/846; (3) check one DeWalt price against an Industrial Supply invoice for net vs list; (4) test a quantity above stock; (5) the third requested brand.
+
 ### 2026-09-09 — Plan + asks texted to Matt and Braydn (13 days of silence broken)
 
 - **Status check first, and it was flat.** Repo clean at the 8/26 commit, Notion last edited 8/26, no email reply from Matt since the two drafts went to him 8/26, and the group text silent since 8/25. Nothing had moved in 13 days. The Connector Feasibility Matrix passed **49 days open** (asked 21 July).

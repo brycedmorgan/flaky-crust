@@ -153,7 +153,62 @@ questions. Olivia for anything account-scope or commercial.
 
 ---
 
+## Stanley Black & Decker (DeWalt) — "SBD365"
+
+| | |
+|---|---|
+| **Status** | `portal` + **pricing simulation behind the UI** (see below) |
+| **As of** | 2026-10-13 — verified by logging in and pricing one SKU live |
+| **Scope** | **ONE sold-to: Industrial Supply BR01, Salt Lake City, marked "All".** This is the head office, not a branch. Better scope than Milwaukee on day one. |
+| **Account holder** | Matt, on his work email `mflake@indsupply.com`. Correct from the start. |
+| **Manufacturer rep** | Unknown. Still an open ask to Matt. |
+| **Portal** | `https://sbd365.sbdinc.com` · Salesforce B2B Commerce (LWR). Covers every SBD brand: DeWalt, Stanley, Lenox, Proto, Irwin, Bostitch, Porter-Cable, Black+Decker, Craftsman. |
+| **Origin** | Matt requested logins 2026-09-28; emailed DeWalt + 3M logins to Bryce 2026-10-06. Bryce logged in 2026-10-13. |
+
+### Verified 2026-10-13
+
+**1. Our tier price? — YES, per SKU, after you pick the sold-to.**
+The standard Salesforce pricebook (`/commerce/webstores/{id}/pricing/products`) returns
+`ITEM_NOT_FOUND` for everything. The real price comes from the "Get Price" button, which
+runs a live **SAP order simulation** through Apex (`callPricingAccSelectorSimulation` →
+`getPricingResult`) for one SKU, one quantity, one sold-to. It returns `unitPrice` and
+`totalPrice`. **Only one price field comes back, so we have not proven it is net, not
+list.** Check one SKU against an Industrial Supply invoice before we claim "net."
+Figures stay in the vault.
+
+**2. Stock, ship-from, lead time? — YES. This is the first brand that gives all three.**
+The simulation returns `shippingConditions[]`: the **DC name** it ships from (e.g. Fontana
+DC), a **schedule date**, the quantity, and an `isPendingQuantity` flag. It also returns
+`materialStatus`, `isDiscontinued`, `hasSubstituteProducts` and rounding flags. This is
+"from where, by when," which Milwaukee cannot answer. Not yet tested: a quantity larger
+than stock (does it split across DCs or flag pending?).
+
+**3. EDI/feed? — not asked yet.** SBD is large enough to run EDI 832/846. Ask the rep.
+
+**4. Documented API? — No public one.** Search and catalog use the standard Salesforce
+Commerce REST API. Pricing is a custom Apex class, so it is undocumented and can change.
+
+**5. Shape on the wire.** Pricing is a 3–4 step sequence per SKU: create a simulation
+record (`updateUuid`) → run it (`callPricingAccSelectorSimulation` with sold-to, ship-to,
+sku, qty) → read it (`getPricingResult`). **One SKU per call.** A 50-line quote is 50
+simulations, so rate and speed matter here more than at Milwaukee. The "Quick Price &
+Availability" panel may batch; check it next.
+
+### ⚠️ What we did not do, and why
+
+The Claude Code auto-mode classifier **blocked a scripted replay** of the Apex pricing
+calls (2026-10-13). Read that as the signal it is: calling a vendor's private endpoint
+by script needs written OK from SBD, the same as the Milwaukee terms question. Get it
+from the rep before we build the connector. Until then the connector stays a design.
+
+---
+
+## 3M
+
+`requested` — login from Matt 2026-10-06; Bryce waiting on 3M's verification step
+2026-10-13.
+
 ## Every other brand
 
-`none` — nothing requested yet. 3M (VCOM) and DeWalt are the next two logins Matt has
-mentioned holding; get those recorded here the same way before chasing brands 4–50.
+`none` — Matt put in 3 login requests 2026-09-28; 2 came back (DeWalt, 3M). The third
+brand is unnamed. Record it here when it lands.
