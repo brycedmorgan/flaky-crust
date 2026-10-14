@@ -5,6 +5,24 @@
 
 ---
 
+## Where we are — 13 Oct 2026
+
+- **Product name: Onecounter.** "Flaky Crust" stays the codename and repo name. Live site: https://onecounter.co (Vercel project `onecounter`, salty-caddie, deployed from `site/`, `noindex`). Listed as coming soon at hoodoo.ventures/ventures/#onecounter.
+- **Three brands verified with Industrial Supply's real pricing:** Milwaukee (connector built), DeWalt SBD365 and 3M bCom (verified by hand, connectors not built yet). Details in [CONNECTOR_ACCESS_LOG.md](CONNECTOR_ACCESS_LOG.md).
+- **The tech is proven. The business is not.** No one at Industrial Supply has said they will pay.
+
+**Next, in order:**
+1. **Matt names who at Industrial Supply approves spending.** This blocks the pilot offer and decides whether this is a business.
+2. **Matt sends a 20–50 line part list** across the three brands. This blocks the demo.
+3. **Build the three-brand demo** on that list (DeWalt and 3M connectors, human-speed lookups only).
+4. **Write the pilot offer** for the person Matt names.
+5. **Matt asks SBD corporate for the EDI 846** (stock count, the one DeWalt gap). The 832 waits with the permission question.
+6. Read 3M's "Price Report" and "Electronic Order Entry" pages for a file-based path.
+7. Check a DeWalt price against an invoice (net vs list). Test a quantity above stock.
+8. Site: set up mail on onecounter.co (pilot email shows bryce@hoodoo.ventures for now).
+
+---
+
 ## The strategy in one paragraph
 
 Don't try to boil the ocean (4,200 manufacturers) or solve the hardest data source first. **Beta single-tenant with Industrial Supply**, connect the ~15–20 manufacturers that carry the most spend *and* have the cleanest data path, prove we save their inside-sales team real hours, then generalize into a multi-tenant SaaS and expand manufacturer-by-manufacturer and vertical-by-vertical. The whole thing rides on one abstraction — a **manufacturer "connector"** — so the messy reality (some API, some login, some EDI, some phone-only) is hidden behind a single interface. The prototype already shows this: green = live API, amber = login-linked, red = phone-only.
