@@ -28,7 +28,9 @@
 - **`noindex` on purpose.** The page names Milwaukee, DeWalt and 3M. Keep it unindexed until the manufacturer permission question is settled.
 - **Contact address `hello@onecounter.co` is a placeholder.** It works only after the domain is bought and mail is set up.
 - **EDI ask narrowed:** Matt asks SBD for the 846 only (stock count). We already see price, so the 832 waits with the permission question.
-- **Pick up next:** Bryce's feedback on the site; buy the domain; decide where it is hosted (needs Bryce's OK for a new Vercel project); then the items in the entry below.
+- **LIVE at https://onecounter.co** (and www). Bryce bought the domain on Vercel. Vercel project `onecounter`, team salty-caddie, deployed from `site/` (`cd site && vercel deploy --prod --scope salty-caddie --yes`). Still `noindex`. Email `hello@onecounter.co` is not set up yet.
+- **Hoodoo:** Onecounter is listed at hoodoo.ventures/ventures/#onecounter as coming soon.
+- **Pick up next:** set up email on onecounter.co; Bryce's site edits; then the items in the entry below.
 
 ### 2026-10-13 — DeWalt and 3M both verified live; three brands in hand
 
