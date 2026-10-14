@@ -20,6 +20,16 @@
 
 ## Session Log
 
+### 2026-10-13 (later) — Product named Onecounter; first site built
+
+- **Name picked by Bryce: Onecounter.** Shortlist was Tierline, Onecounter, Partyard, Quoteyard. Clean `.com`s are all taken; `onecounter.co` and `onecounter.io` looked free on 13 Oct (recheck before buying). Nothing bought yet.
+- **Site v1:** `site/index.html` (static, one file). Hero is a working search demo with sample prices and a quote sheet you can copy. Sections: the 50-portal problem, how it works, what every line shows, logins stay yours, three-brand pilot.
+- **Preview (private):** https://claude.ai/artifact/DAadvokxP2BM5UdjgvKz4V
+- **`noindex` on purpose.** The page names Milwaukee, DeWalt and 3M. Keep it unindexed until the manufacturer permission question is settled.
+- **Contact address `hello@onecounter.co` is a placeholder.** It works only after the domain is bought and mail is set up.
+- **EDI ask narrowed:** Matt asks SBD for the 846 only (stock count). We already see price, so the 832 waits with the permission question.
+- **Pick up next:** Bryce's feedback on the site; buy the domain; decide where it is hosted (needs Bryce's OK for a new Vercel project); then the items in the entry below.
+
 ### 2026-10-13 — DeWalt and 3M both verified live; three brands in hand
 
 - **The logins were in Bryce's personal Gmail all along.** Matt emailed DeWalt + 3M logins to `brycedmorgan@gmail.com` on 2026-10-06 (subject "Log ins"). Bryce replied "On it" and nothing moved for a week. Braydn asked about them 2026-10-13. Passwords are in that email in plain text; move them to the vault and change them.
