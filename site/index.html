@@ -226,7 +226,7 @@ body{margin:0}
   </header>
 
   <div class="brands" aria-label="Brands">
-    <span class="label">Live today</span>
+    <span class="label">First brands</span>
     <span class="b">Milwaukee</span><span class="b">DeWalt</span><span class="b">3M</span>
     <span class="more">More brands each month, in the order you buy from them.</span>
   </div>
@@ -311,7 +311,7 @@ body{margin:0}
       </div>
       <ul>
         <li><span class="mono">01</span><span>Your real parts, at your real price</span></li>
-        <li><span class="mono">02</span><span>Milwaukee, DeWalt and 3M live on day one</span></li>
+        <li><span class="mono">02</span><span>Milwaukee, DeWalt and 3M first</span></li>
         <li><span class="mono">03</span><span>Your next brands chosen by what you spend most on</span></li>
         <li><span class="mono">04</span><span>No contract to look</span></li>
       </ul>
@@ -327,16 +327,16 @@ body{margin:0}
 <script>
 (function(){
   const C = [
-    {m:"Milwaukee",p:"2767-20",d:"M18 FUEL 1/2\" High Torque Impact Wrench, tool only",net:289,list:449,u:"EA",s:"In stock",ok:true,a:"Thu, Oct 16",f:"",t:"impact wrench 1/2 torque m18 fuel"},
+    {m:"Milwaukee",p:"2767-20",d:"M18 FUEL 1/2\" High Torque Impact Wrench, tool only",net:289,list:449,u:"EA",s:"In stock",ok:true,a:"",f:"",t:"impact wrench 1/2 torque m18 fuel"},
     {m:"DeWalt",p:"DCF900B",d:"20V MAX XR 1/2\" High Torque Impact Wrench, tool only",net:274,list:429,u:"EA",s:"Available",ok:true,a:"Fri, Oct 17",f:"Fontana, CA",t:"impact wrench 1/2 torque 20v xr"},
-    {m:"Milwaukee",p:"2960-20",d:"M18 FUEL 3/8\" Mid-Torque Impact Wrench, tool only",net:219,list:339,u:"EA",s:"Backorder",ok:false,a:"Nov 3 est.",f:"",t:"impact wrench 3/8 mid torque m18 fuel"},
+    {m:"Milwaukee",p:"2960-20",d:"M18 FUEL 3/8\" Mid-Torque Impact Wrench, tool only",net:219,list:339,u:"EA",s:"Backorder",ok:false,a:"",f:"",t:"impact wrench 3/8 mid torque m18 fuel"},
     {m:"DeWalt",p:"DCD771C2",d:"20V MAX 1/2\" Drill/Driver Kit, 2 batteries",net:99,list:159,u:"EA",s:"Available",ok:true,a:"Fri, Oct 17",f:"Fontana, CA",t:"drill driver kit 20v"},
-    {m:"Milwaukee",p:"2801-20",d:"M18 Compact Brushless 1/2\" Drill/Driver, tool only",net:89,list:139,u:"EA",s:"In stock",ok:true,a:"Thu, Oct 16",f:"",t:"drill driver m18 brushless"},
-    {m:"Milwaukee",p:"2904-20",d:"M18 FUEL 1/2\" Hammer Drill/Driver, tool only",net:179,list:279,u:"EA",s:"In stock",ok:true,a:"Thu, Oct 16",f:"",t:"hammer drill driver m18 fuel"},
+    {m:"Milwaukee",p:"2801-20",d:"M18 Compact Brushless 1/2\" Drill/Driver, tool only",net:89,list:139,u:"EA",s:"In stock",ok:true,a:"",f:"",t:"drill driver m18 brushless"},
+    {m:"Milwaukee",p:"2904-20",d:"M18 FUEL 1/2\" Hammer Drill/Driver, tool only",net:179,list:279,u:"EA",s:"In stock",ok:true,a:"",f:"",t:"hammer drill driver m18 fuel"},
     {m:"3M",p:"6200",d:"Half Facepiece Reusable Respirator, Medium",net:142,list:198,u:"CS of 24",s:"88 cases",ok:true,a:"Wed, Oct 15",f:"",t:"respirator half facepiece mask ppe"},
     {m:"3M",p:"2091",d:"Particulate Filter P100, 2 per bag",net:268,list:371,u:"CS of 100",s:"142 cases",ok:true,a:"Wed, Oct 15",f:"",t:"respirator filter p100 particulate ppe"},
     {m:"3M",p:"8210",d:"N95 Particulate Respirator",net:118,list:164,u:"CS of 160",s:"Lead time 4 days",ok:false,a:"Mon, Oct 20",f:"",t:"respirator n95 disposable mask ppe"},
-    {m:"Milwaukee",p:"48-22-8424",d:"PACKOUT Rolling Tool Box",net:139,list:209,u:"EA",s:"In stock",ok:true,a:"Thu, Oct 16",f:"",t:"tool box packout rolling storage"},
+    {m:"Milwaukee",p:"48-22-8424",d:"PACKOUT Rolling Tool Box",net:139,list:209,u:"EA",s:"In stock",ok:true,a:"",f:"",t:"tool box packout rolling storage"},
     {m:"DeWalt",p:"DWST08250",d:"TOUGHSYSTEM 2.0 Rolling Tool Box",net:129,list:199,u:"EA",s:"Backorder",ok:false,a:"Oct 29 est.",f:"Fort Mill, SC",t:"tool box toughsystem rolling storage"}
   ];
   const q=document.getElementById('q'), rows=document.getElementById('rows'), sum=document.getElementById('sum'), copy=document.getElementById('copy');
@@ -355,7 +355,7 @@ body{margin:0}
       const on=sheet.has(r.p);
       return '<div class="row"><div class="item"><div class="top"><span class="mfr">'+r.m+'</span><span class="part">'+r.p+'</span>'+(r.p===best?'<span class="best">Best net</span>':'')+'</div><div class="desc" title="'+esc(r.d)+'">'+esc(r.d)+'</div></div>'
         +'<div class="price"><span class="net">'+money(r.net)+'</span><span class="list">'+money(r.list)+'</span> <span class="label" style="font-size:10px">'+r.u+'</span></div>'
-        +'<div class="avail"><span class="dot'+(r.ok?'':' warn')+'"></span>'+r.s+'<span class="from">'+r.a+(r.f?' · '+r.f:'')+'</span></div>'
+        +'<div class="avail"><span class="dot'+(r.ok?'':' warn')+'"></span>'+r.s+(r.a||r.f?'<span class="from">'+[r.a,r.f].filter(Boolean).join(' · ')+'</span>':'')+'</div>'
         +'<button class="add" type="button" data-p="'+r.p+'" aria-pressed="'+on+'" aria-label="'+(on?'Remove ':'Add ')+r.p+' to quote">'+(on?'✓':'+')+'</button></div>';
     }).join('');
   }
@@ -369,15 +369,16 @@ body{margin:0}
   rows.addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const p=b.dataset.p;sheet.has(p)?sheet.delete(p):sheet.add(p);render();total()});
   q.addEventListener('input',render);
   chips.forEach(c=>c.addEventListener('click',()=>{q.value=c.textContent;render()}));
+  const clip=t=>navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject();
   function flash(btn,txt){const o=btn.textContent;btn.textContent=txt;setTimeout(()=>btn.textContent=o,1500)}
   copy.addEventListener('click',()=>{
-    const lines=C.filter(r=>sheet.has(r.p)).map(r=>r.m+'\t'+r.p+'\t'+r.d+'\t'+money(r.net)+' / '+r.u+'\t'+r.s+'\t'+r.a);
+    const lines=C.filter(r=>sheet.has(r.p)).map(r=>r.m+'\t'+r.p+'\t'+r.d+'\t'+money(r.net)+' / '+r.u+'\t'+r.s+'\t'+(r.a||'-'));
     const txt='Brand\tPart\tDescription\tNet\tStock\tArrives\n'+lines.join('\n');
-    navigator.clipboard.writeText(txt).then(()=>flash(copy,'Copied'),()=>flash(copy,'Copy failed'));
+    clip(txt).then(()=>flash(copy,'Copied'),()=>flash(copy,'Copy failed'));
   });
   document.getElementById('copyAddr').addEventListener('click',e=>{
     const b=e.currentTarget, a=document.getElementById('addr');
-    navigator.clipboard.writeText(a.textContent).then(()=>flash(b,'Copied'),()=>{const r=document.createRange();r.selectNodeContents(a);const s=getSelection();s.removeAllRanges();s.addRange(r)});
+    clip(a.textContent).then(()=>flash(b,'Copied'),()=>{const r=document.createRange();r.selectNodeContents(a);const s=getSelection();s.removeAllRanges();s.addRange(r)});
   });
   render();
 })();
